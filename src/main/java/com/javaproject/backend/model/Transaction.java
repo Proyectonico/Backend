@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 @Entity
 public class Transaction {
     
@@ -14,10 +16,17 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @NotNull(message = "the transaction must have an ammount")
+    @Positive(message = "the transaction must be greater than 0")
     private Double monto;
+
+    @NotNull(message = "the transaction must have a date")
     private LocalDate fecha;
+
+    @NotBlank(message = "this field can not be empty")
     private String nombre;
+
+    
     private String descripcion;
 
     public Long getId(){
