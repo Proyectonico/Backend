@@ -18,16 +18,16 @@ public class Transaction {
 
     @NotNull(message = "the transaction must have an ammount")
     @Positive(message = "the transaction must be greater than 0")
-    private Double monto;
+    private Double amount;
 
     @NotNull(message = "the transaction must have a date")
-    private LocalDate fecha;
+    private LocalDate date;
 
     @NotBlank(message = "this field can not be empty")
-    private String nombre;
+    private String name;
 
     
-    private String descripcion;
+    private String account;
 
     public Long getId(){
         return id;
@@ -36,28 +36,28 @@ public class Transaction {
     public void setId(Long id){
         this.id=id;
     }
-    public Double getMonto(){
-        return monto;
+    public Double getAmount(){
+        return amount;
     }
-    public void setMonto(Double monto){
-        this.monto=monto;
+    public void setAmount(Double amount){
+        this.amount=amount;
     }
-    public LocalDate getFecha(){
-        return fecha;
+    public LocalDate getDate(){
+        return date;
     }
-    public void setFecha(LocalDate fecha){
-        this.fecha=fecha;
+    public void setDate(LocalDate date){
+        this.date=date;
     }
-    public String getNombre(){
-        return nombre;
+    public String getName(){
+        return name;
     }
-    public void setNombre(String nombre){
-        this.nombre=nombre;
+    public void setName(String name){
+        this.name=name;
     }
-    public String getDescripcion(){
-        return descripcion;
+    public String getAccount(){
+        return account;
     }
-    public void setDescripcion(String descripcion){
-        this.descripcion=descripcion;
+    public void setAccount(String account){
+        this.account=account;
     }
 }
