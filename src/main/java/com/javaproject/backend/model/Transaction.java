@@ -8,13 +8,24 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Column;
+import java.util.UUID;
+
 @Entity
 public class Transaction {
     
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable=false, updatable=false)
+    private String id;
+
+    @PrePersist
+    public void generatedId(){
+        if (this.id == null){
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 
     @NotNull(message = "the transaction must have an ammount")
     @Positive(message = "the transaction must be greater than 0")
@@ -29,11 +40,11 @@ public class Transaction {
     
     private String account;
 
-    public Long getId(){
+    public String getId(){
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(String id){
         this.id=id;
     }
     public Double getAmount(){

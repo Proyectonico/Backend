@@ -75,7 +75,7 @@ public class TransactionsControllerTest {
 
     @Test
     void shouldDeleteATransaction() throws Exception{
-        Long id = 1L;
+        String id = "test-id";
         doNothing().when(repoTransactions).deleteById(id);
 
         mockMvc.perform(delete("/transactions/{id}", id)).andExpect(status().isNoContent());
@@ -86,7 +86,7 @@ public class TransactionsControllerTest {
     @Test
     void shouldGetATransaction() throws Exception{
         
-        long id=1L;
+        String id="test-id";
 
         Transaction transaction = new Transaction();
         
@@ -105,7 +105,7 @@ public class TransactionsControllerTest {
     @Test
     void shouldUpdateATransaction() throws Exception{
 
-        long id=1L;
+        String id="test-id";
 
         Transaction transaction = new Transaction();
 

@@ -28,23 +28,23 @@ public class TransactionsController {
     private RepoTransactions repoTransactions;
 
     @PostMapping
-    public Transaction crearTransaccion(@Valid @RequestBody Transaction transaction) {
+    public Transaction createTransaccion(@Valid @RequestBody Transaction transaction) {
         return repoTransactions.save(transaction);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction (@PathVariable Long id){
+    public ResponseEntity<Void> deleteTransaction (@PathVariable String id){
         repoTransactions.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transaction> getTransaction(@PathVariable Long id) {
+    public ResponseEntity<Transaction> getTransaction(@PathVariable String id) {
         return repoTransactions.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Transaction> putTransaction(@PathVariable Long id, @Valid @RequestBody Transaction transaction) {
+    public ResponseEntity<Transaction> putTransaction(@PathVariable String id, @Valid @RequestBody Transaction transaction) {
         return repoTransactions.findById(id).map(existing-> {
             existing.setAmount(transaction.getAmount());
             existing.setDate(transaction.getDate());
