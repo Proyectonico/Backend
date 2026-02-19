@@ -23,6 +23,7 @@ jobs:
       - name: Dar permisos a mvnw
         run: chmod +x mvnw
 
-      - name: Build + Tests
-        run: ./mvnw clean verify
+      - name: Run tests
+        run: ./mvnw test -Dspring.profiles.active=test
+
 

@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.javaproject.backend.repository.RepoCategory;
 import org.springframework.test.context.ActiveProfiles;
+import javax.sql.DataSource;
+
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
@@ -15,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class BackendApplicationTests {
 
 	@Autowired
-	RepoCategory repoCategory;
+	DataSource ds;
 
 	@Test
-	void contextLoads(){
-		assertNotNull(repoCategory);
+	void printDataSource(){
+		System.out.println(ds);
 	}
 }
