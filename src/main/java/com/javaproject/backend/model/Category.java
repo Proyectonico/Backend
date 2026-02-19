@@ -14,6 +14,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import jakarta.persistence.*;
 import java.util.UUID;
 import java.util.List;
@@ -36,7 +38,8 @@ public class Category {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "parent-id")
+    @JoinColumn(name = "parent_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category parent;
 
     @OneToMany(
