@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -28,87 +27,90 @@ import com.javaproject.backend.model.Category;
 @ActiveProfiles("test")
 @Transactional
 public class CategoryIntegrationTest {
-    @Autowired
-    MockMvc mockMvc;
+	@Autowired
+	MockMvc mockMvc;
 
-    @Autowired
-    RepoCategory repoCategory;
+	@Autowired
+	RepoCategory repoCategory;
 
-    @Autowired 
-    ObjectMapper objectMapper;
+	@Autowired
+	ObjectMapper objectMapper;
 
-    @Test 
-    void ShouldCreateAndRetrieveCategory() throws Exception{
+	@Test
+	void ShouldCreateAndRetrieveCategory() throws Exception {
 
-        Category categoryParent = new Category();
-        categoryParent.setName("Farmacia");
+		Category categoryParent = new Category();
+		categoryParent.setName("Farmacia");
 
-        String response = mockMvc.perform(post("/category")
-        .contentType("application/json").content(objectMapper.writeValueAsString(categoryParent)))
-        .andReturn().getResponse().getContentAsString();
+		String response = mockMvc
+				.perform(post("/category").contentType("application/json")
+						.content(objectMapper.writeValueAsString(categoryParent)))
+				.andReturn().getResponse().getContentAsString();
 
-        Category savedParent = objectMapper.readValue(response, Category.class);
+		Category savedParent = objectMapper.readValue(response, Category.class);
 
-        Category categoryChild = new Category();
-        categoryChild.setName("Remedios");
-        categoryChild.setParent(savedParent);
+		Category categoryChild = new Category();
+		categoryChild.setName("Remedios");
+		categoryChild.setParent(savedParent);
 
-        String responseChild = mockMvc.perform(post("/category")
-        .contentType("application/json").content(objectMapper.writeValueAsString(categoryChild)))
-        .andReturn().getResponse().getContentAsString();
+		String responseChild = mockMvc
+				.perform(post("/category").contentType("application/json")
+						.content(objectMapper.writeValueAsString(categoryChild)))
+				.andReturn().getResponse().getContentAsString();
 
-        Category savedChild = objectMapper.readValue(responseChild, Category.class);
+		Category savedChild = objectMapper.readValue(responseChild, Category.class);
 
-        mockMvc.perform(get("/category/" + savedChild.getId())).andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(savedChild.getId()))
-        .andExpect(jsonPath("$.name").value("Remedios"))
-        .andExpect(jsonPath("$.parent.id").value(savedParent.getId()));
+		mockMvc.perform(get("/category/" + savedChild.getId())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(savedChild.getId()))
+				.andExpect(jsonPath("$.name").value(savedChild.getName()))
+				.andExpect(jsonPath("$.parent.id").value(savedParent.getId()));
 
+	}
+	@Test
+	void shouldCreateThenPutAndThenDeleteAllInOne() throws Exception {
 
-    }
-    @Test 
-    void shouldCreateThenPutAndThenDeleteAllInOne() throws Exception{
-        
-        Category categoryParent = new Category();
-        categoryParent.setName("Farmacia");
+		Category categoryParent = new Category();
+		categoryParent.setName("Farmacia");
 
-        String response = mockMvc.perform(post("/category")
-        .contentType("application/json").content(objectMapper.writeValueAsString(categoryParent)))
-        .andReturn().getResponse().getContentAsString();
+		String response = mockMvc
+				.perform(post("/category").contentType("application/json")
+						.content(objectMapper.writeValueAsString(categoryParent)))
+				.andReturn().getResponse().getContentAsString();
 
-        Category savedParent = objectMapper.readValue(response, Category.class);
+		Category savedParent = objectMapper.readValue(response, Category.class);
 
-        Category categoryParent2 = new Category();
-        categoryParent2.setName("Supermarket");
+		Category categoryParent2 = new Category();
+		categoryParent2.setName("Supermarket");
 
-        String responseParent2 = mockMvc.perform(post("/category")
-        .contentType("application/json").content(objectMapper.writeValueAsString(categoryParent2)))
-        .andReturn().getResponse().getContentAsString();
+		String responseParent2 = mockMvc
+				.perform(post("/category").contentType("application/json")
+						.content(objectMapper.writeValueAsString(categoryParent2)))
+				.andReturn().getResponse().getContentAsString();
 
-        Category savedParent2 = objectMapper.readValue(responseParent2, Category.class);
+		Category savedParent2 = objectMapper.readValue(responseParent2, Category.class);
 
-        Category categoryChild = new Category();
-        categoryChild.setName("Remedios");
-        categoryChild.setParent(savedParent);
+		Category categoryChild = new Category();
+		categoryChild.setName("Remedios");
+		categoryChild.setParent(savedParent);
 
-        String responseChild = mockMvc.perform(post("/category")
-        .contentType("application/json").content(objectMapper.writeValueAsString(categoryChild)))
-        .andReturn().getResponse().getContentAsString();
+		String responseChild = mockMvc
+				.perform(post("/category").contentType("application/json")
+						.content(objectMapper.writeValueAsString(categoryChild)))
+				.andReturn().getResponse().getContentAsString();
 
-        Category savedChild = objectMapper.readValue(responseChild, Category.class);
+		Category savedChild = objectMapper.readValue(responseChild, Category.class);
 
-        savedChild.setParent(savedParent2);
-    
-        mockMvc.perform(put("/category/" + savedChild.getId())
-        .contentType("application/json").content(objectMapper.writeValueAsString(savedChild))).andExpect(status().isOk());
+		savedChild.setParent(savedParent2);
 
-        mockMvc.perform(get("/category/" + savedChild.getId()))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.parent.id").value(savedParent2.getId()));
-        
-        mockMvc.perform(delete("/category/" + savedParent2.getId())).andExpect(status().isNoContent());
+		mockMvc.perform(put("/category/" + savedChild.getId()).contentType("application/json")
+				.content(objectMapper.writeValueAsString(savedChild))).andExpect(status().isOk());
 
-        mockMvc.perform(get("/category/" + savedParent2.getId())).andExpect(status().isNotFound());
+		mockMvc.perform(get("/category/" + savedChild.getId())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.parent.id").value(savedParent2.getId()));
 
-    }
+		mockMvc.perform(delete("/category/" + savedParent2.getId())).andExpect(status().isNoContent());
+
+		mockMvc.perform(get("/category/" + savedParent2.getId())).andExpect(status().isNotFound());
+
+	}
 }

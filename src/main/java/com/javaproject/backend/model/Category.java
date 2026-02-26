@@ -23,56 +23,49 @@ import java.util.ArrayList;
 
 @Entity
 public class Category {
-    @Id
-    @Column(nullable=false, updatable=false)
-    private String id;
+	@Id
+	@Column(nullable = false, updatable = false)
+	private String id;
 
-    @PrePersist
-    public void generatedId(){
-        if (this.id == null){
-            this.id = UUID.randomUUID().toString();
-        }
-    }
+	@PrePersist
+	public void generatedId() {
+		if (this.id == null) {
+			this.id = UUID.randomUUID().toString();
+		}
+	}
 
-    @NotBlank(message = "this field can not be empty")
-    private String name;
+	@NotBlank(message = "this field can not be empty")
+	private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Category parent;
+	@ManyToOne
+	@JoinColumn(name = "parent_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Category parent;
 
-    @OneToMany(
-        mappedBy="parent",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    private List<Category> children = new ArrayList<>();
+	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Category> children = new ArrayList<>();
 
+	public String getId() {
+		return id;
+	}
 
-    
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getId(){
-        return id;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setId(String id){
-        this.id=id;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName(){
-        return name;
-    }
+	public Category getParent() {
+		return parent;
+	}
 
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public Category getParent(){
-        return parent;
-    }
-
-    public void setParent(Category parent){
-        this.parent=parent;
-    }
+	public void setParent(Category parent) {
+		this.parent = parent;
+	}
 }

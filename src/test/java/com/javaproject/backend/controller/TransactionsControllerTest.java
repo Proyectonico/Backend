@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-
 import java.time.LocalDate;
 
 import java.util.Optional;
@@ -31,104 +30,102 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(TransactionsController.class)
 public class TransactionsControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private RepoTransactions repoTransactions;
+	@MockBean
+	private RepoTransactions repoTransactions;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Test
-    void shouldCreateATransaction() throws Exception{
-        Transaction transaction = new Transaction();
-        transaction.setAmount(150.0);
-        transaction.setDate(LocalDate.of(2024,2,24));
-        transaction.setName("Valdes Felipe");
-        transaction.setAccount(null);
-    
+	@Test
+	void shouldCreateATransaction() throws Exception {
+		Transaction transaction = new Transaction();
+		transaction.setAmount(150.0);
+		transaction.setDate(LocalDate.of(2024, 2, 24));
+		transaction.setName("Valdes Felipe");
+		transaction.setAccount(null);
 
-    when(repoTransactions.save(any(Transaction.class))).thenReturn(transaction);
-        
-    mockMvc.perform(post("/transactions").contentType("application/json").content(objectMapper.writeValueAsString(transaction))).andExpect(status().isOk());
-    
-    
-}
+		when(repoTransactions.save(any(Transaction.class))).thenReturn(transaction);
 
-    @Test
-    void shouldGiveAnErrorWithPost() throws Exception{
-        Transaction transaction = new Transaction();
-        transaction.setAmount(-50.0);
-        transaction.setDate(null);
-        transaction.setName("Valdes Felipe");
-        transaction.setAccount(null);
+		mockMvc.perform(post("/transactions").contentType("application/json")
+				.content(objectMapper.writeValueAsString(transaction))).andExpect(status().isOk());
 
-    when(repoTransactions.save(any(Transaction.class))).thenReturn(transaction);
+	}
 
-    mockMvc.perform(post("/transactions").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(transaction))).andExpect(status().isBadRequest());
-    
-    
-}
+	@Test
+	void shouldGiveAnErrorWithPost() throws Exception {
+		Transaction transaction = new Transaction();
+		transaction.setAmount(-50.0);
+		transaction.setDate(null);
+		transaction.setName("Valdes Felipe");
+		transaction.setAccount(null);
 
+		when(repoTransactions.save(any(Transaction.class))).thenReturn(transaction);
 
+		mockMvc.perform(post("/transactions").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(transaction))).andExpect(status().isBadRequest());
 
-    @Test
-    void shouldDeleteATransaction() throws Exception{
-        String id = "test-id";
-        doNothing().when(repoTransactions).deleteById(id);
+	}
 
-        mockMvc.perform(delete("/transactions/{id}", id)).andExpect(status().isNoContent());
+	@Test
+	void shouldDeleteATransaction() throws Exception {
+		String id = "test-id";
+		doNothing().when(repoTransactions).deleteById(id);
 
-        verify(repoTransactions, times(1)).deleteById(id);
-    }
+		mockMvc.perform(delete("/transactions/{id}", id)).andExpect(status().isNoContent());
 
-    @Test
-    void shouldGetATransaction() throws Exception{
-        
-        String id="test-id";
+		verify(repoTransactions, times(1)).deleteById(id);
+	}
 
-        Transaction transaction = new Transaction();
-        
-        transaction.setAmount(150.0);
-        transaction.setDate(LocalDate.of(2024,2,24));
-        transaction.setName("Valdes Felipe");
-        transaction.setAccount(null);
+	@Test
+	void shouldGetATransaction() throws Exception {
 
-        when(repoTransactions.findById(id)).thenReturn(Optional.of(transaction));
+		String id = "test-id";
 
-        mockMvc.perform(get("/transactions/{id}",id)).andExpect(status().isOk());
+		Transaction transaction = new Transaction();
 
-        verify(repoTransactions, times(1)).findById(id);
-    }
+		transaction.setAmount(150.0);
+		transaction.setDate(LocalDate.of(2024, 2, 24));
+		transaction.setName("Valdes Felipe");
+		transaction.setAccount(null);
 
-    @Test
-    void shouldUpdateATransaction() throws Exception{
+		when(repoTransactions.findById(id)).thenReturn(Optional.of(transaction));
 
-        String id="test-id";
+		mockMvc.perform(get("/transactions/{id}", id)).andExpect(status().isOk());
 
-        Transaction transaction = new Transaction();
+		verify(repoTransactions, times(1)).findById(id);
+	}
 
-        transaction.setAmount(150.0);
-        transaction.setDate(LocalDate.of(2024,2,24));
-        transaction.setName("Valdes Felipe");
-        transaction.setAccount(null);
+	@Test
+	void shouldUpdateATransaction() throws Exception {
 
-        Transaction updatedTransaction = new Transaction();
+		String id = "test-id";
 
-        updatedTransaction.setAmount(50.0);
-        updatedTransaction.setDate(LocalDate.of(2024,2,24));
-        updatedTransaction.setName("Valdes Feli");
-        updatedTransaction.setAccount(null);
+		Transaction transaction = new Transaction();
 
-        when(repoTransactions.findById(id)).thenReturn(Optional.of(transaction));
+		transaction.setAmount(150.0);
+		transaction.setDate(LocalDate.of(2024, 2, 24));
+		transaction.setName("Valdes Felipe");
+		transaction.setAccount(null);
 
-        when(repoTransactions.save(any(Transaction.class))).thenReturn(updatedTransaction);
+		Transaction updatedTransaction = new Transaction();
 
-        mockMvc.perform(put("/transactions/{id}",id).contentType("application/json").content(objectMapper.writeValueAsString(updatedTransaction))).andExpect(status().isOk());
+		updatedTransaction.setAmount(50.0);
+		updatedTransaction.setDate(LocalDate.of(2024, 2, 24));
+		updatedTransaction.setName("Valdes Feli");
+		updatedTransaction.setAccount(null);
 
-        verify(repoTransactions, times(1)).findById(id);
-        verify(repoTransactions, times(1)).save(any(Transaction.class));
+		when(repoTransactions.findById(id)).thenReturn(Optional.of(transaction));
 
-    }
+		when(repoTransactions.save(any(Transaction.class))).thenReturn(updatedTransaction);
+
+		mockMvc.perform(put("/transactions/{id}", id).contentType("application/json")
+				.content(objectMapper.writeValueAsString(updatedTransaction))).andExpect(status().isOk());
+
+		verify(repoTransactions, times(1)).findById(id);
+		verify(repoTransactions, times(1)).save(any(Transaction.class));
+
+	}
 }

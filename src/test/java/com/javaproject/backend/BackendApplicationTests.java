@@ -8,10 +8,7 @@ import com.javaproject.backend.repository.RepoCategory;
 import org.springframework.test.context.ActiveProfiles;
 import javax.sql.DataSource;
 
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -21,7 +18,7 @@ class BackendApplicationTests {
 	DataSource ds;
 
 	@Test
-	void printDataSource(){
+	void printDataSource() {
 		System.out.println(ds);
 	}
 }

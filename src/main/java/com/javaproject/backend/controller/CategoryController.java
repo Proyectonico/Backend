@@ -16,55 +16,47 @@ import java.util.List;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-
-
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
-    @Autowired
-    private RepoCategory repoCategory;
+	@Autowired
+	private RepoCategory repoCategory;
 
-    @PostMapping()
-    public ResponseEntity<Category> CreateCategory(@Valid @RequestBody Category category) {
-        
-        Category saved = repoCategory.save(category);
-        return ResponseEntity.ok(saved);
-    }
+	@PostMapping()
+	public ResponseEntity<Category> CreateCategory(@Valid @RequestBody Category category) {
 
-    @GetMapping()
-    public ResponseEntity<List<Category>> getAllCategories () {
-        List<Category> categories = repoCategory.findAll();
-        return ResponseEntity.ok(categories);
-    }
+		Category saved = repoCategory.save(category);
+		return ResponseEntity.ok(saved);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable String id) {
-        return repoCategory.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-        
-    }
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable String id){
-        repoCategory.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+	@GetMapping()
+	public ResponseEntity<List<Category>> getAllCategories() {
+		List<Category> categories = repoCategory.findAll();
+		return ResponseEntity.ok(categories);
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable String id, @RequestBody @Valid Category category) {
-        
-        return repoCategory.findById(id).map(existing -> {
-            existing.setName(category.getName());
-            existing.setParent(category.getParent());
+	@GetMapping("/{id}")
+	public ResponseEntity<Category> getCategory(@PathVariable String id) {
+		return repoCategory.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 
-            return ResponseEntity.ok(repoCategory.save(existing));
-        }).orElse(ResponseEntity.notFound().build());
-    }
-    
+	}
 
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteCategory(@PathVariable String id) {
+		repoCategory.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
 
+	@PutMapping("/{id}")
+	public ResponseEntity<Category> updateCategory(@PathVariable String id, @RequestBody @Valid Category category) {
 
-    
+		return repoCategory.findById(id).map(existing -> {
+			existing.setName(category.getName());
+			existing.setParent(category.getParent());
+
+			return ResponseEntity.ok(repoCategory.save(existing));
+		}).orElse(ResponseEntity.notFound().build());
+	}
+
 }

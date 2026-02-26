@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-
 import java.time.LocalDate;
 
 import java.util.Optional;
@@ -30,93 +29,94 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @WebMvcTest(CategoryController.class)
 public class CategoryControllerTest {
-@Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private RepoCategory repoCategory;
+	@MockBean
+	private RepoCategory repoCategory;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Test
-    void shouldCreateACategory() throws Exception{
-        Category category = new Category();
-        category.setName("Supermercado");
+	@Test
+	void shouldCreateACategory() throws Exception {
+		Category category = new Category();
+		category.setName("Supermercado");
 
-    when(repoCategory.save(any(Category.class))).thenReturn(category);
-        
-    mockMvc.perform(post("/category").contentType("application/json").content(objectMapper.writeValueAsString(category))).andExpect(status().isOk());
-    
-    
-}
+		when(repoCategory.save(any(Category.class))).thenReturn(category);
 
-    void shouldCreateACategoryWithParent() throws Exception{
+		mockMvc.perform(
+				post("/category").contentType("application/json").content(objectMapper.writeValueAsString(category)))
+				.andExpect(status().isOk());
 
-        Category parent = new Category();
-        parent.setId("test-id");
-        parent.setName("Farmacia");
+	}
 
-        Category category = new Category();
-        category.setName("Supermercado");
-        category.setParent(parent);
+	void shouldCreateACategoryWithParent() throws Exception {
 
-    when(repoCategory.save(any(Category.class))).thenReturn(category);
-        
-    mockMvc.perform(post("/category").contentType("application/json").content(objectMapper.writeValueAsString(category))).andExpect(status().isOk());
-    
-    
-}
+		Category parent = new Category();
+		parent.setId("test-id");
+		parent.setName("Farmacia");
 
+		Category category = new Category();
+		category.setName("Supermercado");
+		category.setParent(parent);
 
-    @Test
-    void shouldDeleteACateegory() throws Exception{
-        String id = "test-id";
-        doNothing().when(repoCategory).deleteById(id);
+		when(repoCategory.save(any(Category.class))).thenReturn(category);
 
-        mockMvc.perform(delete("/category/{id}", id)).andExpect(status().isNoContent());
+		mockMvc.perform(
+				post("/category").contentType("application/json").content(objectMapper.writeValueAsString(category)))
+				.andExpect(status().isOk());
 
-        verify(repoCategory, times(1)).deleteById(id);
-    }
+	}
 
-    @Test
-    void shouldGetACategory() throws Exception{
-        
-        String id="test-id";
+	@Test
+	void shouldDeleteACateegory() throws Exception {
+		String id = "test-id";
+		doNothing().when(repoCategory).deleteById(id);
 
-        Category category = new Category();
-        
-        category.setName("Supermercado");
-        
+		mockMvc.perform(delete("/category/{id}", id)).andExpect(status().isNoContent());
 
-        when(repoCategory.findById(id)).thenReturn(Optional.of(category));
+		verify(repoCategory, times(1)).deleteById(id);
+	}
 
-        mockMvc.perform(get("/category/{id}",id)).andExpect(status().isOk());
+	@Test
+	void shouldGetACategory() throws Exception {
 
-        verify(repoCategory, times(1)).findById(id);
-    }
+		String id = "test-id";
 
-    @Test
-    void shouldUpdateACategory() throws Exception{
+		Category category = new Category();
 
-        String id="test-id";
+		category.setName("Supermercado");
 
-        Category category = new Category();
+		when(repoCategory.findById(id)).thenReturn(Optional.of(category));
 
-        category.setName("Supermercado");
+		mockMvc.perform(get("/category/{id}", id)).andExpect(status().isOk());
 
-        Category updatedCategory = new Category();
+		verify(repoCategory, times(1)).findById(id);
+	}
 
-        updatedCategory.setName("Farmacia");
-        
-        when(repoCategory.findById(id)).thenReturn(Optional.of(category));
+	@Test
+	void shouldUpdateACategory() throws Exception {
 
-        when(repoCategory.save(any(Category.class))).thenReturn(updatedCategory);
+		String id = "test-id";
 
-        mockMvc.perform(put("/category/{id}",id).contentType("application/json").content(objectMapper.writeValueAsString(updatedCategory))).andExpect(status().isOk());
+		Category category = new Category();
 
-        verify(repoCategory, times(1)).findById(id);
-        verify(repoCategory, times(1)).save(any(Category.class));
+		category.setName("Supermercado");
 
-    }
+		Category updatedCategory = new Category();
+
+		updatedCategory.setName("Farmacia");
+
+		when(repoCategory.findById(id)).thenReturn(Optional.of(category));
+
+		when(repoCategory.save(any(Category.class))).thenReturn(updatedCategory);
+
+		mockMvc.perform(put("/category/{id}", id).contentType("application/json")
+				.content(objectMapper.writeValueAsString(updatedCategory))).andExpect(status().isOk());
+
+		verify(repoCategory, times(1)).findById(id);
+		verify(repoCategory, times(1)).save(any(Category.class));
+
+	}
 }

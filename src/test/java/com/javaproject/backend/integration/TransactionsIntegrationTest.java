@@ -26,40 +26,32 @@ import java.time.LocalDate;
 @Transactional
 class TransactionsIntegrationTest {
 
-    @Autowired
-    MockMvc mockMvc;
+	@Autowired
+	MockMvc mockMvc;
 
-    @Autowired
-    RepoTransactions repo;
+	@Autowired
+	RepoTransactions repo;
 
-    @Autowired
-    ObjectMapper mapper;
+	@Autowired
+	ObjectMapper mapper;
 
-    @Test
-    void shouldCreateAndRetrieveTransaction() throws Exception {
+	@Test
+	void shouldCreateAndRetrieveTransaction() throws Exception {
 
-        Transaction t = new Transaction();
-        t.setAmount(1000.0);
-        t.setDate(LocalDate.of(2024,2,24));
-        t.setName("Valdes Felipe");
-        t.setAccount(null);
+		Transaction t = new Transaction();
+		t.setAmount(1000.0);
+		t.setDate(LocalDate.of(2024, 2, 24));
+		t.setName("Valdes Felipe");
+		t.setAccount(null);
 
-        
-        String response = mockMvc.perform(post("/transactions")
-                .contentType("application/json")
-                .content(mapper.writeValueAsString(t)))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+		String response = mockMvc
+				.perform(post("/transactions").contentType("application/json").content(mapper.writeValueAsString(t)))
+				.andReturn().getResponse().getContentAsString();
 
-        Transaction saved = mapper.readValue(response, Transaction.class);
+		Transaction saved = mapper.readValue(response, Transaction.class);
 
-        
-        mockMvc.perform(get("/transactions/" + saved.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(saved.getId()))
-                .andExpect(jsonPath("$.amount").value(1000.0))
-                .andExpect(jsonPath( "$.date").value("2024-02-24"))
-                .andExpect(jsonPath("$.name").value("Valdes Felipe"));
-    }
+		mockMvc.perform(get("/transactions/" + saved.getId())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(saved.getId())).andExpect(jsonPath("$.amount").value(1000.0))
+				.andExpect(jsonPath("$.date").value("2024-02-24")).andExpect(jsonPath("$.name").value(saved.getName()));
+	}
 }
