@@ -18,50 +18,46 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
 @RestController
 @RequestMapping("/transactions")
 public class TransactionsController {
 
-    @Autowired
-    private RepoTransactions repoTransactions;
+	@Autowired
+	private RepoTransactions repoTransactions;
 
-    @PostMapping
-    public Transaction createTransaccion(@Valid @RequestBody Transaction transaction) {
-        return repoTransactions.save(transaction);
-    }
+	@PostMapping
+	public Transaction createTransaccion(@Valid @RequestBody Transaction transaction) {
+		return repoTransactions.save(transaction);
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction (@PathVariable String id){
-        repoTransactions.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteTransaction(@PathVariable String id) {
+		repoTransactions.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Transaction> getTransaction(@PathVariable String id) {
-        return repoTransactions.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<Transaction> getTransaction(@PathVariable String id) {
+		return repoTransactions.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Transaction> putTransaction(@PathVariable String id, @Valid @RequestBody Transaction transaction) {
-        return repoTransactions.findById(id).map(existing-> {
-            existing.setAmount(transaction.getAmount());
-            existing.setDate(transaction.getDate());
-            existing.setName(transaction.getName());
-            existing.setAccount(transaction.getAccount());
+	@PutMapping("/{id}")
+	public ResponseEntity<Transaction> putTransaction(@PathVariable String id,
+			@Valid @RequestBody Transaction transaction) {
+		return repoTransactions.findById(id).map(existing -> {
+			existing.setAmount(transaction.getAmount());
+			existing.setDate(transaction.getDate());
+			existing.setName(transaction.getName());
+			existing.setAccount(transaction.getAccount());
 
-            return ResponseEntity.ok(repoTransactions.save(existing));
+			return ResponseEntity.ok(repoTransactions.save(existing));
 
-        }).orElse(ResponseEntity.notFound().build());
-    }
-    @GetMapping()
-    public ResponseEntity<List<Transaction>> getAllTransactions() {
-        List<Transaction> transactions = repoTransactions.findAll();
-        return ResponseEntity.ok(transactions);
-    }
-    
+		}).orElse(ResponseEntity.notFound().build());
+	}
+	@GetMapping()
+	public ResponseEntity<List<Transaction>> getAllTransactions() {
+		List<Transaction> transactions = repoTransactions.findAll();
+		return ResponseEntity.ok(transactions);
+	}
 
-    
 }
-
